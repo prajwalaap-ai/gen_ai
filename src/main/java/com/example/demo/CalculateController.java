@@ -13,7 +13,7 @@ public class CalculateController {
     @GetMapping("/add")
     public int add(@RequestParam int a, @RequestParam int b) {
         Calculator calculator = new Calculator();
-        return calculator.add(a, b);
+        return calculator.Add(a, b);
     }
 
 

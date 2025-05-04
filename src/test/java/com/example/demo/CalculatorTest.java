@@ -16,9 +16,9 @@ public class CalculatorTest {
 
     @Test
     public void testAdd() {
-        assertEquals(5, calculator.add(2, 3));
-        assertEquals(0, calculator.add(-1, 1));
-        assertEquals(-5, calculator.add(-2, -3));
+        assertEquals(5, calculator.Add(2, 3));
+        assertEquals(0, calculator.Add(-1, 1));
+        assertEquals(-5, calculator.Add(-2, -3));
     }
 
     @Test

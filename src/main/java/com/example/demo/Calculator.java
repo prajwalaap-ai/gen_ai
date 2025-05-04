@@ -1,4 +1,5 @@
 package com.example.demo;
+import java.nio.file.Paths;
 
 /**
  * A utility class that provides various mathematical operations.
@@ -12,7 +13,7 @@ public class Calculator {
      * @param b the second integer
      * @return the sum of a and b
      */
-    public int add(int a, int b) {
+    public int Add(int a, int b) {
         return a + b;
     }
 
