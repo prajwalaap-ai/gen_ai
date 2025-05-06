@@ -24,7 +24,7 @@ public class SonarAutoFixerWithOpenRewrite {
         List<Recipe> recipes = List.of(
                 new RemoveUnusedImports()
 
-                // You can add more recipes here
+        // You can add more recipes here
         );
 
         InMemoryExecutionContext ctx = new InMemoryExecutionContext(Throwable::printStackTrace);

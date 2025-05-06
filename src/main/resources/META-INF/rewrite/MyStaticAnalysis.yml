@@ -1,0 +1,8 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: com.example.MyStaticAnalysis
+displayName: My Custom Static Analysis Recipe
+recipeList:
+  - org.openrewrite.staticanalysis.CommonStaticAnalysis
+#  - org.openrewrite.java.cleanup.RemoveSystemOutPrintln
+  - org.openrewrite.java.format.AutoFormat
+  - org.openrewrite.java.RemoveUnusedImports

@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 
-
 public class SonarQubeFixer {
-
 
 
     public static void main(String[] args) throws IOException {
@@ -73,37 +71,35 @@ public class SonarQubeFixer {
     }
 
 
-
-
     private static JsonNode fetchSonarIssues() throws IOException {
-            String SONARQUBE_URL = "http://localhost:9000";
-            String TOKEN = "sqp_36dade72f677202de270d9667fe798907694aeca";
-            String apiUrl = SONARQUBE_URL + "/api/issues/search";
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((TOKEN + ":").getBytes()));
+        String sonarqubeUrl = "http://localhost:9000";
+        String token = "sqp_36dade72f677202de270d9667fe798907694aeca";
+        String apiUrl = sonarqubeUrl + "/api/issues/search";
+        URL url = new URL(apiUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((token + ":").getBytes()));
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode jsonResponse = objectMapper.readTree(response.toString());
-                if (jsonResponse.has("issues") && jsonResponse.get("issues").isArray()) {
-                    return jsonResponse.get("issues");
-                }
-
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-            return null;
+            in.close();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response.toString());
+            if (jsonResponse.has("issues") && jsonResponse.get("issues").isArray()) {
+                return jsonResponse.get("issues");
+            }
+
         }
+        return null;
+    }
 
     public static List<SourceFile> getSourceFiles(Set<String> filesNamesWithIssues) throws IOException {
         org.openrewrite.java.JavaParser parser = org.openrewrite.java.JavaParser.fromJavaVersion().build();
@@ -125,7 +121,8 @@ public class SonarQubeFixer {
                 .scanRuntimeClasspath()
                 .build();
         // Create a recipe to apply
-        Recipe recipe = environment.activateRecipes("org.openrewrite.staticanalysis.CommonStaticAnalysis");
+        Recipe recipe = environment.activateRecipes("com.example.MyStaticAnalysis");
+//        Recipe recipe = environment.activateRecipes("org.openrewrite.staticanalysis.CommonStaticAnalysis");
         System.out.println("Recipe activated: " + recipe.getName());
         return recipe;
     }
@@ -133,8 +130,7 @@ public class SonarQubeFixer {
     private static @NotNull List<Result> getResults(List<SourceFile> sourceFiles, Recipe recipe) {
         ExecutionContext ctx = new InMemoryExecutionContext();
         LargeSourceSet sourceSet = new InMemoryLargeSourceSet(sourceFiles);
-        List<Result> results = recipe.run(sourceSet, ctx).getChangeset().getAllResults();
-        return results;
+        return recipe.run(sourceSet, ctx).getChangeset().getAllResults();
     }
 
     private static void writeFixedCode(File file, String newCode) throws IOException {
